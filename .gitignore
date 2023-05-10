@@ -1,0 +1,12 @@
+# Editor Related
+.idea/*
+*.iml
+
+## Terraform Related
+terraform.tfstate
+terraform.tfstate.*
+.terraform.tfstate.*
+*.tfstate
+.terraform/
+.terraform.lock.hcl
+.tfplan*

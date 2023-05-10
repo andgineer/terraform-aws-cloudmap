@@ -1,0 +1,24 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.4.0
+  hooks:
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+      exclude: \.ipynb$
+
+- repo: https://github.com/gruntwork-io/pre-commit
+  rev: v0.1.11  # https://github.com/gruntwork-io/pre-commit/releases
+  hooks:
+    - id: terraform-validate
+      exclude: terraform/common/
+    - id: terraform-fmt
+
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.78.0  # https://github.com/antonbabenko/pre-commit-terraform/releases
+  hooks:
+#    - id: terraform_tfsec
+    - id: terraform_docs
+    - id: terraform_checkov
+      args:
+        - --args=--quiet
+#        - --args=--skip-check CKV_AWS_?
