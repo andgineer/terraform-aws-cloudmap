@@ -6,7 +6,7 @@ init:
 	cd terraform/my-application ; \
 	rm -r .terraform; rm terraform.lock.hcl; \
 	terraform init \
-		-input=false -backend-config '../environments/${ENVIRONMENT}/backend.tfvars' \
+		-input=false -backend-config '../environments/${ENVIRONMENT}/backend.hcl' \
 		-backend-config="key=my-application-${ENVIRONMENT}/terraform.tfstate"
 
 test:

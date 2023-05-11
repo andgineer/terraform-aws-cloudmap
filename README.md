@@ -3,6 +3,20 @@
 This Terraform project template enables the creation of Fargate and EC2-based ESC clusters 
 that communicate with each other through AWS CloudMap.
 
+For illustration purposes we use different approach for Service Discovery for Fargate and EC2-based ECS clusters.
+
+In the case of Fargate, we use AWS Service Connect.
+In the case of EC2-based ECS clusters, we use DNS-based service discovery.
+
+The downsides of Service Connect:
+* creates HTTP-only CloudMap services, so you cannot resolve this names with DNS
+* needs additional container for the proxy (created automatically by AWS)
+
+The gotcha of DNS-based service discovery - if your containers work in `bridge` mode, it
+creates `SRV` DNS records instead of `A`-records.
+And for example free version of nginx cannot resolve them.
+To have `A`-records you should use `awsvpc` mode.
+
 ## Structure
 
 * `terraform/my-application/` - contains AWS resources for the ECS clusters
@@ -37,7 +51,7 @@ This template uses pre-commit to ensure that the code is formatted correctly and
 
 ### Installation
 
-To install pre-commit git hooks, in your project folder run:
+To install pre-commit git hooks, in the project folder run:
 
     pre-commit install
 
