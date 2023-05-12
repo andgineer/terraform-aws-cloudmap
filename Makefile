@@ -4,7 +4,7 @@ export ENVIRONMENT
 
 init:
 	cd terraform/my-application ; \
-	rm -r .terraform; rm terraform.lock.hcl; \
+	rm -f -r .terraform; rm -f terraform.lock.hcl; \
 	terraform init \
 		-input=false -backend-config '../environments/${ENVIRONMENT}/backend.hcl' \
 		-backend-config="key=my-application-${ENVIRONMENT}/terraform.tfstate"

@@ -17,7 +17,7 @@ resource "aws_ecs_cluster" "this" {
 
 # ============================== Task ==============================
 data "template_file" "this" {
-  template = file("${path.module}/templates/task.tftpl")
+  template = file("${path.module}/templates/task.tf.tpl")
   vars = {
     LOG_GROUP_NAME  = aws_cloudwatch_log_group.this.name
     AWS_REGION      = var.region

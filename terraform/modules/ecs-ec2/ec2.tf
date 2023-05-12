@@ -17,7 +17,7 @@ resource "aws_launch_configuration" "this" {
   security_groups      = var.ecs_security_groups
   user_data            = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.this.name} >> /etc/ecs/ecs.config"
   instance_type        = "m5.large"
-  key_name             = "andgineer"
+#  key_name             = "andgineer"
   #checkov:skip=CKV_AWS_8: https://docs.bridgecrew.io/docs/general_13
 
   root_block_device {

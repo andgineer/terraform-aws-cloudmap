@@ -11,7 +11,7 @@ variable "lb_target_group_port" {
   default = 80
 }
 
-variable "ecs-ec2-image" {
+variable "ecs_ec2_image" {
   type = string
 }
 

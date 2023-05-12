@@ -39,6 +39,21 @@ To switch environments, follow these steps:
 It is crucial not to merge states if the local state is not cleared. Just delete the local state, 
 and `terraform init` will restore it from S3, which is always safe.
 
+## Usage
+
+If you do not have AWS creds for CLI, create user in AWS console IAM section, 
+include it to admin group (create it if needed). 
+
+The user should have policies
+* AutoScalingFullAccess
+
+In Security Credentials of the IAM user create Access Key credentials.
+
+Then set them in env vars (or in `~/.aws/credentials` file):
+
+    export AWS_ACCESS_KEY_ID=...
+    export AWS_SECRET_ACCESS_KEY=...
+
 ## Developer environment
 
 ### Terraform

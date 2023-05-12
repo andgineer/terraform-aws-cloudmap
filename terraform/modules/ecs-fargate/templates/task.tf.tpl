@@ -19,7 +19,7 @@
                     "appProtocol": "http"
                 }
             ],
-            "essential": false,
+            "essential": true,
             "environment": [
             ],
             "environmentFiles": [],

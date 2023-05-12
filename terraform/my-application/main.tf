@@ -18,11 +18,11 @@ data "aws_subnet" "this" {
   count             = length(data.aws_availability_zones.available.names)
   vpc_id            = data.aws_vpc.available.id
   availability_zone = data.aws_availability_zones.available.names[count.index]
-
-  filter {
-    name   = "tag:Name"
-    values = ["*subnet*"]
-  }
+#
+#  filter {
+#    name   = "tag:Name"
+#    values = ["subnet-*"]
+#  }
 }
 
 ## Security Groups:
@@ -52,7 +52,7 @@ module "ecs-ec2" {
 
   ecs_name             = local.ecs_ec2_prefix
   ecs_taskdef_family   = local.ecs_ec2_prefix
-  image = var.ecs-ec2-image
+  image = var.ecs_ec2_image
   ecs_security_groups = [
     data.aws_security_group.sg_default.id
   ]
