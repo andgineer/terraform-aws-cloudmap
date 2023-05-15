@@ -62,6 +62,10 @@ module "ecs-ec2" {
 
   tags               = local.ec2_tags
   cloudmap_namespace = var.cloudmap_namespace
+
+  depends_on = [
+    null_resource.fail_if_non_default_workspace
+  ]
 }
 
 module "ecs-fargate" {

@@ -11,3 +11,11 @@ locals {
     Name = "${local.ecs_fargate_prefix}",
   }
 }
+
+resource "null_resource" "fail_if_non_default_workspace" {
+  count = terraform.workspace != "default" ? 1 : 0
+
+  provisioner "local-exec" {
+    command = "echo 'You should use default Terraform workspace.' && exit 1"
+  }
+}
