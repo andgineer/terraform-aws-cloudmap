@@ -1,3 +1,4 @@
+# strange extension because of bug https://github.com/VladRassokhin/intellij-hcl/issues/201
 region           = "eu-west-2"
 vpc_id           = "vpc-0a084e5dab7c8c29c"
 

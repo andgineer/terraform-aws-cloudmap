@@ -1,0 +1,4 @@
+# tfbackend is the recommended extension but in case of Pycharm you have to associate it with terraform files manually
+bucket = "andgineer-terraform"
+region = "eu-west-2"
+workspace_key_prefix = "my-workspaces"  # instead of default env:/
