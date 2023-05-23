@@ -20,8 +20,7 @@
                 }
             ],
             "essential": true,
-            "environment": [
-            ],
+            "environment": ${environment},
             "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],

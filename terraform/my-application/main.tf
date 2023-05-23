@@ -60,7 +60,7 @@ module "ecs-ec2" {
   ecs_container_count   = 1
   ecs_subnets           = data.aws_subnet.this.*.id
 
-  tags               = local.ec2_tags
+  tags               = local.tags
   cloudmap_namespace = var.cloudmap_namespace
 
   depends_on = [
@@ -88,7 +88,7 @@ module "ecs-fargate" {
 
   image  = var.ecs_fargate_image
   container_port       = 80
-  tags               = local.fargate_tags
+  tags               = local.tags
   cloudmap_namespace = var.cloudmap_namespace
 
   depends_on = [

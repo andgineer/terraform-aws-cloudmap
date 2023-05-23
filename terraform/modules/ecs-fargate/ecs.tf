@@ -24,6 +24,9 @@ data "template_file" "this" {
     IMAGE   = var.image
     NAME    = var.ecs_name
     CONTAINER_PORT  = var.container_port
+    environment = jsonencode([
+      {name = "env_var_name", value = "value"}
+    ])
   }
 
   depends_on = [
