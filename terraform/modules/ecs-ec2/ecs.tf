@@ -22,6 +22,7 @@ resource "aws_ecs_service" "this" {
   desired_count        = var.ecs_container_count
   force_new_deployment = true
   propagate_tags       = "TASK_DEFINITION"
+  enable_execute_command = true  # ecs execute-command
 
   capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.this.name

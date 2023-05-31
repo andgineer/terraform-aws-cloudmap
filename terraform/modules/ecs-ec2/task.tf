@@ -23,6 +23,24 @@ resource "aws_ecs_task_definition" "this" {
     ],
     essential: true,
     environment: [{name = "env_var_name", value = "value"}],
+    secrets = [
+      {
+        name      = "DB_HOST"
+        valueFrom = "${aws_secretsmanager_secret.database.arn}:endpoint::"
+      },
+      {
+        name      = "DB_NAME"
+        valueFrom = "${aws_secretsmanager_secret.database.arn}:database::"
+      },
+      {
+        name      = "DB_USER"
+        valueFrom = "${aws_secretsmanager_secret.database.arn}:username::"
+      },
+      {
+        name      = "DB_PASS"
+        valueFrom = "${aws_secretsmanager_secret.database.arn}:password::"
+      }
+    ]
     mountPoints: [],
     volumesFrom: [],
     logConfiguration: {
@@ -34,6 +52,7 @@ resource "aws_ecs_task_definition" "this" {
         "awslogs-stream-prefix": "ecs"
       }
     }
+    linuxParameters = { initProcessEnabled = true }  # ecs execute-command
   }])
 
   runtime_platform {

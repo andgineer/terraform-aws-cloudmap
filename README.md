@@ -54,6 +54,24 @@ Then set them in env vars (or in `~/.aws/credentials` file):
     export AWS_ACCESS_KEY_ID=...
     export AWS_SECRET_ACCESS_KEY=...
 
+## Debug in the cloud
+
+In the configuration is enabled debug mode for ECS containers (marked with `# ecs execute-command`).
+See details in [AWS ECS EXEC](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html).
+
+You should locally install [Session manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-macos).
+
+Useful utility to check your system readiness for ECS EXEC is [Exec-checker](https://github.com/aws-containers/amazon-ecs-exec-checker).
+
+You can connect to the container in ECS using
+
+      aws ecs execute-command --cluster ec2 --task <TASKID> --container ec2 --interactive --command "/bin/sh"
+
+Task ID you can find in AWS console in ECS section or with CLI:
+    
+        aws ecs list-tasks --cluster ec2
+
+
 ## Developer environment
 
 ### Terraform
