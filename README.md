@@ -65,11 +65,14 @@ Useful utility to check your system readiness for ECS EXEC is [Exec-checker](htt
 
 You can connect to the container in ECS using
 
-      aws ecs execute-command --cluster ec2 --task <TASKID> --container ec2 --interactive --command "/bin/sh"
+      aws ecs execute-command --cluster ec2 \
+        --task $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text) \
+        --container ec2 --interactive --command "/bin/sh"
 
-Task ID you can find in AWS console in ECS section or with CLI:
-    
-        aws ecs list-tasks --cluster ec2
+To look into active task
+
+    aws ecs describe-tasks  --cluster ec2 \
+        --tasks $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text)
 
 
 ## Developer environment
