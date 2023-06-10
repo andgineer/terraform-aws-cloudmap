@@ -17,7 +17,6 @@ resource "aws_secretsmanager_secret_version" "database" {
   secret_string = jsonencode({
     username = "admin"
     password = random_password.db.result
-    database = "database"
   })
 }
 
@@ -30,6 +29,7 @@ resource "aws_secretsmanager_secret_version" "database_endpoint" {
     password = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["password"]
 
     endpoint = aws_rds_cluster.database.endpoint
+    database = aws_rds_cluster.database.database_name
   })
   depends_on = [aws_rds_cluster.database]
 }
@@ -47,8 +47,8 @@ resource "aws_rds_cluster" "database" {
   #checkov:skip=CKV_AWS_324: no DB logs
   cluster_identifier              = "${var.ecs_name}-db"
   engine                          = "aurora-postgresql"
-  engine_mode                     = "serverless"
-  engine_version                  = "13.3"
+  engine_mode                     = "provisioned" # "serverless" for serverless v1
+  engine_version                  = "13.6" # at least 13.6 for serverless v2
   master_username                 = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["username"]
   master_password                 = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["password"]
   db_subnet_group_name            = aws_db_subnet_group.this.name
@@ -61,13 +61,33 @@ resource "aws_rds_cluster" "database" {
   db_cluster_parameter_group_name = "default.aurora-postgresql13"
   database_name                   = "database"
 
-  scaling_configuration {
-    auto_pause               = false
-    min_capacity             = 2
-    max_capacity             = 2
-    seconds_until_auto_pause = 300
-    timeout_action           = "RollbackCapacityChange"
+#  # serverless v1
+#  scaling_configuration {
+#    auto_pause               = false
+#    min_capacity             = 2
+#    max_capacity             = 2
+#    seconds_until_auto_pause = 300
+#    timeout_action           = "RollbackCapacityChange"
+#  }
+
+  # serverless v2
+  serverlessv2_scaling_configuration {
+    min_capacity = 0.5 # $45 months. RDS on one t3.micro is $13
+    max_capacity = 2
   }
+
+  tags = var.tags
+}
+
+# is necessary for serverless v2 only
+resource "aws_rds_cluster_instance" "orthanc" {
+  identifier                 = "${var.ecs_name}-db"
+  cluster_identifier         = aws_rds_cluster.database.id
+  instance_class             = "db.serverless"  # serverless v2
+  engine                     = aws_rds_cluster.database.engine
+  engine_version             = aws_rds_cluster.database.engine_version
+  auto_minor_version_upgrade = true
+  monitoring_interval        = 5
 
   tags = var.tags
 }
