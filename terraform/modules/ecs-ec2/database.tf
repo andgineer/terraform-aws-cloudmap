@@ -80,6 +80,7 @@ resource "aws_rds_cluster" "database" {
 
 # is necessary for serverless v2 only
 resource "aws_rds_cluster_instance" "orthanc" {
+  #checkov:skip=CKV_AWS_118: do not want to mess with monitoring ARN for the detailed monitoring
   identifier                 = "${var.ecs_name}-db"
   cluster_identifier         = aws_rds_cluster.database.id
   instance_class             = "db.serverless"  # serverless v2
