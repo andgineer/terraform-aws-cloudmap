@@ -24,7 +24,6 @@ resource "aws_secretsmanager_secret_version" "database_endpoint" {
   # After RDS have been created we can add endpoint to the secret
   secret_id = aws_secretsmanager_secret.database.id
   secret_string = jsonencode({
-    database = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["database"]
     username = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["username"]
     password = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["password"]
 
