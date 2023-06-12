@@ -86,7 +86,7 @@ resource "aws_rds_cluster_instance" "orthanc" {
   engine                     = aws_rds_cluster.database.engine
   engine_version             = aws_rds_cluster.database.engine_version
   auto_minor_version_upgrade = true
-  monitoring_interval        = 5
+#  monitoring_interval        = 5
 
   tags = var.tags
 }
