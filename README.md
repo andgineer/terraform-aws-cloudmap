@@ -1,29 +1,21 @@
-# Terraform project structure template
+# Terraform Project Template for Service Discovery in geterogenic ECS Clusters
 
-This Terraform project template enables the creation of Fargate and EC2-based ESC clusters 
-that communicate with each other through AWS CloudMap.
+This template helps set up Fargate and EC2-based ECS clusters using AWS CloudMap for communication.
 
-For illustration purposes we use different approach for Service Discovery for Fargate and EC2-based ECS clusters.
+## Service Discovery
 
-In the case of Fargate, we use AWS Service Connect.
-In the case of EC2-based ECS clusters, we use DNS-based service discovery.
+- **Fargate:** Uses AWS Service Connect, creating HTTP-only CloudMap services. Includes an automatic proxy container.
+- **EC2-based ECS:** Uses DNS-based discovery. 
 
-The downsides of Service Connect:
-* creates HTTP-only CloudMap services, so you cannot resolve this names with DNS
-* needs additional container for the proxy (created automatically by AWS)
+### AWS Service Connect (Fargate)
 
-The gotcha of DNS-based service discovery - if your containers work in `bridge` mode, it
-creates `SRV` DNS records instead of `A`-records.
-And for example free version of nginx cannot resolve them.
-To have `A`-records you should use `awsvpc` mode.
+- Creates HTTP-only CloudMap services (no DNS resolution)
+- Requires an additional proxy container (managed by AWS)
 
-## Structure
+### DNS-based Service Discovery (EC2-based ECS)
 
-* `terraform/my-application/` - contains AWS resources for the ECS clusters
-* `terraform/environment/` - contains variables specific to each environment
-* `terraform/modules/` - includes common Terraform code (modules)
-* `tests/features/` - contains BDD tests for Terraform configuration
-* `Makefile` - includes commands to run Terraform and tests
+- If containers use `bridge` mode, creates `SRV` records instead of `A` records (Nginx free version can't resolve `SRV` records)
+- To get `A` records, use `awsvpc` mode
 
 ## Rationale
 
@@ -31,45 +23,54 @@ To have `A`-records you should use `awsvpc` mode.
 
 To avoid duplicating code, the same `my-application` folder is used for different environments. 
 However, it is necessary to re-initialize the local Terraform state from S3 every time the environment is switched. 
+
 To switch environments, follow these steps:
 
-* Clear the local state, including the .terraform folder and .terraform.lock.hcl file.
-* Run terraform init with the appropriate environment variables.
+- Clear the local state, including the `.terraform` folder and `.terraform.lock.hcl` file.
+- Run `terraform init` with the appropriate environment variables.
 
-It is crucial not to merge states if the local state is not cleared. Just delete the local state, 
-and `terraform init` will restore it from S3, which is always safe.
+It is crucial not to merge states if the local state is not cleared. 
+Just delete the local state, and `terraform init` will restore it from S3, which is always safe.
+
+## Structure
+
+* `terraform/my-application/` - AWS resources for the ECS clusters
+* `terraform/environment/` - Environment-specific variables
+* `terraform/modules/` - Common Terraform code
+* `tests/features/` - BDD tests for the Terraform configuration
+* `Makefile` - Commands for Terraform and tests
 
 ## Usage
 
-If you do not have AWS creds for CLI, create user in AWS console IAM section, 
-include it to admin group (create it if needed). 
+To use AWS CLI:
+1. Create an IAM user and include it in the admin group.
+2. Attach `AutoScalingFullAccess` policy.
+3. Create Access Key credentials.
+4. Set credentials in environment variables or `~/.aws/credentials`:
 
-The user should have policies
-* AutoScalingFullAccess
+```shell
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+```
 
-In Security Credentials of the IAM user create Access Key credentials.
+## Debugging in the Cloud
 
-Then set them in env vars (or in `~/.aws/credentials` file):
-
-    export AWS_ACCESS_KEY_ID=...
-    export AWS_SECRET_ACCESS_KEY=...
-
-## Debug in the cloud
-
-In the configuration is enabled debug mode for ECS containers (marked with `# ecs execute-command`).
+In the configuration, the debug mode for ECS containers is enabled (marked with `# ecs execute-command`).
 See details in [AWS ECS EXEC](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html).
 
-You should locally install [Session manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-macos).
+You should locally install 
+[Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-macos).
 
-Useful utility to check your system readiness for ECS EXEC is [Exec-checker](https://github.com/aws-containers/amazon-ecs-exec-checker).
+A useful utility to check your system's readiness for ECS EXEC is 
+[Exec-checker](https://github.com/aws-containers/amazon-ecs-exec-checker).
 
-You can connect to the container in ECS using
+You can connect to the container in ECS using:
 
       aws ecs execute-command --cluster ec2 \
         --task $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text) \
         --container ec2 --interactive --command "/bin/sh"
 
-To look into active task
+To look into an active task
 
     aws ecs describe-tasks  --cluster ec2 \
         --tasks $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text)
@@ -79,38 +80,46 @@ To look into active task
 
 ### Terraform
 
-To install Terraform, you can download it from the official website or install it using Homebrew (macOS).
+Install Terraform from the official website or via Homebrew (macOS).
 
 ## Pre-commit
 
-This template uses pre-commit to ensure that the code is formatted correctly and to check for any potential issues with security and syntax.
+Install pre-commit hooks in the project folder:
 
-### Installation
+```shell
+pre-commit install
+```
 
-To install pre-commit git hooks, in the project folder run:
+Ensure you have the necessary tools for Terraform code analysis installed:
 
-    pre-commit install
-
-The Terraform static code analyzer requires access to AWS cloud. 
-If you use environment variables for AWS authentication, ensure that they are accessible by your IDE.
-
-### Pre-commit dependencies (MacOS)
-
-Before running pre-commit, ensure that you have installed the following dependencies:
-
-    brew tap liamg/tfsec
-    brew install terraform-docs tflint tfsec checkov
-    brew install pre-commit gawk coreutils
+```shell
+brew tap liamg/tfsec
+brew install terraform-docs tflint tfsec checkov
+brew install pre-commit gawk coreutils
+```
 
 ## Tests
 
-### BDD
-To run BDD tests, install the dependencies using the following command:
+### BDD Testing
 
-    pip install -r requirements.txt
+Install and / or activate Python virtual environment (you need [uv](https://github.com/astral-sh/uv) installed):
 
-You can then write scenarios in the `tests/features/` directory. To run the tests, use the following command:
+```shell
+. ./activate.sh
+```
 
-    make test
+Note spaces after the first dot.
 
-Possible steps are described on the [terraform-compliance website](https://terraform-compliance.com/pages/Examples/).
+Initialize Terraform (you need AWS credentials active) with:
+
+```shell
+make init
+```
+
+Write and run BDD tests with:
+
+```shell
+make test
+```
+
+Visit [terraform-compliance](https://terraform-compliance.com/pages/Examples/) for more on writing tests.
