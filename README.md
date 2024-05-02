@@ -1,4 +1,4 @@
-# Terraform Project Template for Service Discovery in geterogenic ECS Clusters
+# Terraform Project Template for Service Discovery in ECS Clusters with EC2 and Fargate
 
 This template helps set up Fargate and EC2-based ECS clusters using AWS CloudMap for communication.
 
@@ -82,15 +82,17 @@ To look into an active task
 
 Install Terraform from the official website or via Homebrew (macOS).
 
-## Pre-commit
-
-Install pre-commit hooks in the project folder:
-
 ```shell
-pre-commit install
+brew install hashicorp/tap/terraform
 ```
 
-Ensure you have the necessary tools for Terraform code analysis installed:
+### Pre-commit
+
+Use [pre-commit](https://pre-commit.com/#install) hooks to validate the terraform code quality:
+
+    pre-commit install
+
+#### Terraform code analysis
 
 ```shell
 brew tap liamg/tfsec
@@ -98,9 +100,9 @@ brew install terraform-docs tflint tfsec checkov
 brew install pre-commit gawk coreutils
 ```
 
-## Tests
+## BDD Testing
 
-### BDD Testing
+### virtualenv
 
 Install and / or activate Python virtual environment (you need [uv](https://github.com/astral-sh/uv) installed):
 
@@ -110,13 +112,17 @@ Install and / or activate Python virtual environment (you need [uv](https://gith
 
 Note spaces after the first dot.
 
+For work it need [uv](https://github.com/astral-sh/uv) installed.
+
+### Terraform
+
 Initialize Terraform (you need AWS credentials active) with:
 
 ```shell
 make init
 ```
 
-Write and run BDD tests with:
+### BDD tests
 
 ```shell
 make test
