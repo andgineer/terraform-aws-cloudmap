@@ -1,0 +1,21 @@
+name: Tfsec
+
+# Only trigger, when the build workflow succeeded
+on:
+  workflow_run:
+    workflows: ["Tflint"]
+    types:
+      - completed
+
+permissions: read-all
+
+jobs:
+  tfsec-checks:
+      runs-on: ubuntu-latest
+      steps:
+
+      - name : Check out Git Repository
+        uses: actions/checkout@v2
+
+      - name: Run Tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
