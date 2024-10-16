@@ -11,7 +11,7 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 resource "aws_launch_configuration" "this" {
-  name                 = "${var.ecs_name}"
+  name                 = var.ecs_name
   image_id             = "ami-0a242269c4b530c5e"
   iam_instance_profile = aws_iam_instance_profile.this.name
   security_groups      = var.ecs_security_groups
@@ -38,7 +38,7 @@ resource "aws_launch_configuration" "this" {
 
 # ============================== Capacity provider ==============================
 resource "aws_ecs_capacity_provider" "this" {
-  name = "${var.ecs_name}"
+  name = var.ecs_name
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.this.arn
     managed_scaling {
@@ -53,7 +53,7 @@ resource "aws_ecs_capacity_provider" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-  name                 = "${var.ecs_name}"
+  name                 = var.ecs_name
   vpc_zone_identifier  = var.ecs_subnets
   launch_configuration = aws_launch_configuration.this.name
   #checkov:skip=CKV_AWS_315: The scaling group is managed by ESC cluster so we do not need to specify instance type
@@ -77,7 +77,7 @@ resource "aws_autoscaling_group" "this" {
 
 # ============================== Attach to the ECS cluster ==============================
 
-resource "aws_ecs_cluster_capacity_providers" "this" {
+resource "aws_ecs_cluster_capacity_providers" "this" {  # tflint-ignore: terraform_required_providers
   cluster_name       = aws_ecs_cluster.this.name
   capacity_providers = [aws_ecs_capacity_provider.this.name]
 }

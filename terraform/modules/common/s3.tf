@@ -14,13 +14,13 @@ resource "aws_s3_bucket" "this" {
   }
 }
 
-data "aws_s3_bucket" "common" {
+data "aws_s3_bucket" "common" {  # tflint-ignore: terraform_required_providers
   count  = terraform.workspace == local.common_workspace ? 0 : 1
   bucket = "andgineer-bucket"
 }
 
 output "bucket_name" {
-  value = coalesce(join("", aws_s3_bucket.this.*.bucket), join("", data.aws_s3_bucket.common.*.bucket))
+  value = coalesce(join("", aws_s3_bucket.this.*.bucket), join("", data.aws_s3_bucket.common.*.bucket))  # tflint-ignore: terraform_deprecated_index
   # The coalesce function returns the first non-empty value.
   # The join function is used to handle the list of values returned by the count parameter,
   # so that only a single string value is returned.

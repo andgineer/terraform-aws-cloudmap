@@ -1,20 +1,45 @@
 ## VPC
-variable "account_id" {}
-variable "region" {}
-variable "vpc_id" {}
-variable "subnets" { type = list(string) }
+variable "region" {
+  type = string
+}
+variable "vpc_id" {
+    type = string
+}
+variable "subnets" {
+  type = list(string)
+}
 
 ## Cloudwatch
-variable "log_group_name" {}
+variable "log_group_name" {
+  type = string
+}
 
 # ECS
-variable "ecs_name" {}
-variable "ecs_taskdef_family" {}
-variable "ecs_security_groups" {}
-variable "ecs_target_group_port" {}
-variable "ecs_container_count" {}
-variable "ecs_subnets" {}
+variable "ecs_name" {
+  type = string
+}
+variable "ecs_taskdef_family" {
+  type = string
+}
+variable "ecs_security_groups" {
+  type = list(string)
+}
+variable "ecs_target_group_port" {
+  type = number
+}
+variable "ecs_container_count" {
+  type = number
+}
+variable "ecs_subnets" {
+  type = list(string)
+}
 
-variable "image" {}
-variable "tags" {}
-variable "cloudmap_namespace" {}
+variable "image" {
+  type = string
+}
+variable "tags" {
+  type = map(string)
+}
+variable "cloudmap_namespace" {
+  type = string
+}

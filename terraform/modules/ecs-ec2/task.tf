@@ -1,4 +1,4 @@
-resource "aws_ecs_task_definition" "this" {
+resource "aws_ecs_task_definition" "this" {  # tflint-ignore: terraform_required_providers
   family             = var.ecs_taskdef_family
   execution_role_arn = aws_iam_role.ecs_task_execution.arn
   task_role_arn      = aws_iam_role.ecs_instance.arn

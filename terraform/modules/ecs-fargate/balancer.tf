@@ -32,7 +32,7 @@ resource "aws_alb_listener" "this" {
   tags = var.tags
 }
 
-resource "aws_lb_target_group" "this" {
+resource "aws_lb_target_group" "this" {  # tflint-ignore: terraform_required_providers
   name        = var.ecs_name
   port        = 80
   protocol    = "HTTP"

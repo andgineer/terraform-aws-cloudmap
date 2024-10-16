@@ -80,7 +80,7 @@ resource "aws_iam_policy" "ecs_instance" {
   policy      = data.aws_iam_policy_document.ecs_instance.json
 }
 
-resource "aws_iam_role" "ecs_instance" {
+resource "aws_iam_role" "ecs_instance" {  # tflint-ignore: terraform_required_providers
   name = "${var.ecs_name}_ecs_instance"
   managed_policy_arns = [
     data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn,

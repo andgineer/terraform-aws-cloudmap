@@ -4,7 +4,7 @@
 
 ## ============================== Cluster ==============================
 resource "aws_ecs_cluster" "this" {
-  name = "${var.ecs_name}"
+  name = var.ecs_name
 
   setting {
     name  = "containerInsights"
@@ -46,7 +46,7 @@ resource "aws_ecs_task_definition" "this" {
 
 # ============================== Service ==============================
 resource "aws_ecs_service" "this" {
-  name                 = "${var.ecs_name}"
+  name                 = var.ecs_name
   cluster              = aws_ecs_cluster.this.id
   task_definition      = aws_ecs_task_definition.this.arn
   desired_count        = var.ecs_container_count

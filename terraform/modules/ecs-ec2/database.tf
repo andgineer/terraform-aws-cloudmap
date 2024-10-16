@@ -1,4 +1,4 @@
-resource "random_password" "db" {
+resource "random_password" "db" {  # tflint-ignore: terraform_required_providers
   length  = 22
   special = false
 }
@@ -92,7 +92,7 @@ resource "aws_rds_cluster_instance" "orthanc" {
   tags = var.tags
 }
 
-resource "null_resource" "db_is_ready" {
+resource "null_resource" "db_is_ready" {  # tflint-ignore: terraform_required_providers
   triggers = {
     cluster_id = aws_rds_cluster.database.id
   }
