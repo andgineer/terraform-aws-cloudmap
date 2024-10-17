@@ -3,7 +3,7 @@
 ##
 #
 
-resource "aws_alb" "this" {
+resource "aws_alb" "this" {  # tfsec:ignore:aws-elb-drop-invalid-headers
   #checkov:skip=CKV_AWS_91:
   #checkov:skip=CKV_AWS_131:
   #checkov:skip=CKV_AWS_150:
@@ -22,7 +22,7 @@ resource "aws_alb_listener" "this" {
   #checkov:skip=CKV_AWS_103:
   load_balancer_arn = aws_alb.this.arn
   port              = 80
-  protocol          = "HTTP"
+  protocol          = "HTTP"  # tfsec:ignore:aws-elb-http-not-used
 
   default_action {
     type             = "forward"

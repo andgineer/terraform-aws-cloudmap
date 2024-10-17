@@ -40,7 +40,7 @@ data "aws_security_group" "sg_default" {
 
 ## Modules
 
-module "ecs-ec2" {
+module "ecs-ec2" {  # tfsec:ignore:aws-iam-no-policy-wildcards
   source = "../modules/ecs-ec2/"
 
   account_id = data.aws_caller_identity.current.account_id

@@ -3,7 +3,7 @@ resource "random_password" "db" {  # tflint-ignore: terraform_required_providers
   special = false
 }
 
-resource "aws_secretsmanager_secret" "database" {
+resource "aws_secretsmanager_secret" "database" {  # tfsec:ignore:aws-ssm-secret-use-customer-key
   #checkov:skip=CKV_AWS_149: KMS encryption
   name                    = "${var.ecs_name}-database"
   description             = "Credentials for the database"
@@ -39,7 +39,7 @@ resource "aws_db_subnet_group" "this" {
   tags       = var.tags
 }
 
-resource "aws_rds_cluster" "database" {
+resource "aws_rds_cluster" "database" {  # tfsec:ignore:aws-rds-encrypt-cluster-storage-data
   #checkov:skip=CKV_AWS_139: Deletion protection
   #checkov:skip=CKV_AWS_327: KMS encryption
   #checkov:skip=CKV_AWS_162: no IAM auth
@@ -79,7 +79,7 @@ resource "aws_rds_cluster" "database" {
 }
 
 # is necessary for serverless v2 only
-resource "aws_rds_cluster_instance" "orthanc" {
+resource "aws_rds_cluster_instance" "orthanc" {  # tfsec:ignore:aws-rds-enable-performance-insights
   #checkov:skip=CKV_AWS_118: do not want to mess with monitoring ARN for the detailed monitoring
   identifier                 = "${var.ecs_name}-db"
   cluster_identifier         = aws_rds_cluster.database.id

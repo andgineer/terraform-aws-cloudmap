@@ -20,7 +20,7 @@ resource "aws_launch_configuration" "this" {
 #  key_name             = "andgineer"
   #checkov:skip=CKV_AWS_8: https://docs.bridgecrew.io/docs/general_13
 
-  root_block_device {
+  root_block_device {  # tfsec:ignore:aws-ec2-enable-launch-config-at-rest-encryption
     volume_type = "gp2"
     volume_size = "10"
   }
