@@ -79,8 +79,10 @@ resource "aws_rds_cluster" "database" {  # tfsec:ignore:aws-rds-encrypt-cluster-
 }
 
 # is necessary for serverless v2 only
-resource "aws_rds_cluster_instance" "orthanc" {  # tfsec:ignore:aws-rds-enable-performance-insights
+resource "aws_rds_cluster_instance" "orthanc" {  # tflint-ignore: terraform_required_providers # tfsec:ignore:aws-rds-enable-performance-insights
   #checkov:skip=CKV_AWS_118: do not want to mess with monitoring ARN for the detailed monitoring
+  #checkov:skip=CKV_AWS_353: no need for performance insights
+  #checkov:skip=CKV_AWS_354: no encryption for performance insights
   identifier                 = "${var.ecs_name}-db"
   cluster_identifier         = aws_rds_cluster.database.id
   instance_class             = "db.serverless"  # serverless v2

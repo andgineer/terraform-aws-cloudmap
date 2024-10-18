@@ -61,7 +61,8 @@ resource "aws_iam_role" "ecs_task_execution" {
 
 ## ============================== ECS Container Role ==============================
 data "aws_iam_policy_document" "ecs_instance" {
-  #checkov:skip=CKV_AWS_111:
+  # checkov:skip=CKV_AWS_356:Start resource is ok in Demo
+  # checkov:skip=CKV_AWS_111:
 
     # CloudWatch
     statement {
