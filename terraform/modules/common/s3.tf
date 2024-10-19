@@ -5,6 +5,9 @@ locals {
 }
 
 resource "aws_s3_bucket" "this" {
+  #checkov:skip=CKV_AWS_62: S3 bucket no notfication
+  #checkov:skip=CKV_AWS_18: no logging access
+  #checkov:skip=CKV2_AWS_6: no public access
   count  = terraform.workspace == local.common_workspace ? 1 : 0
   bucket = "andgineer-bucket"
     force_destroy = true # 'terraform destroy' will remove the S3 bucket, even if it contains objects

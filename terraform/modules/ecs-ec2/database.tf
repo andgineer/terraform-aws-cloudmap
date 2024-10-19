@@ -5,6 +5,7 @@ resource "random_password" "db" {  # tflint-ignore: terraform_required_providers
 
 resource "aws_secretsmanager_secret" "database" {  # tfsec:ignore:aws-ssm-secret-use-customer-key
   #checkov:skip=CKV_AWS_149: KMS encryption
+  #checkov:skip=CKV_AWS_57: no rotation
   name                    = "${var.ecs_name}-database"
   description             = "Credentials for the database"
   recovery_window_in_days = 0 # remove AWS delete protection to ease terraform destroy
@@ -44,6 +45,7 @@ resource "aws_rds_cluster" "database" {  # tfsec:ignore:aws-rds-encrypt-cluster-
   #checkov:skip=CKV_AWS_327: KMS encryption
   #checkov:skip=CKV_AWS_162: no IAM auth
   #checkov:skip=CKV_AWS_324: no DB logs
+  #checkov:skip=CKV2_AWS_8: backup retention
   cluster_identifier              = "${var.ecs_name}-db"
   engine                          = "aurora-postgresql"
   engine_mode                     = "provisioned" # "serverless" for serverless v1
