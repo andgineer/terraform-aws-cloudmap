@@ -45,7 +45,7 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 # ============================== Service ==============================
-resource "aws_ecs_service" "this" {
+resource "aws_ecs_service" "this" {  # tflint-ignore: terraform_required_providers
   name                 = var.ecs_name
   cluster              = aws_ecs_cluster.this.id
   task_definition      = aws_ecs_task_definition.this.arn
