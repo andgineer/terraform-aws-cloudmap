@@ -35,7 +35,7 @@ Just delete the local state, and `terraform init` will restore it from S3, which
 ## Structure
 
 * `terraform/my-application/` - AWS resources for the ECS clusters
-* `terraform/environment/` - Environment-specific variables
+* `terraform/environments/` - Environment-specific variables
 * `terraform/modules/` - Common Terraform code
 * `tests/features/` - BDD tests for the Terraform configuration
 * `Makefile` - Commands for Terraform and tests
@@ -58,8 +58,7 @@ export AWS_SECRET_ACCESS_KEY=...
 In the configuration, the debug mode for ECS containers is enabled (marked with `# ecs execute-command`).
 See details in [AWS ECS EXEC](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html).
 
-You should locally install 
-[Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-macos).
+You should locally install [Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-macos).
 
 A useful utility to check your system's readiness for ECS EXEC is 
 [Exec-checker](https://github.com/aws-containers/amazon-ecs-exec-checker).
@@ -70,7 +69,7 @@ You can connect to the container in ECS using:
         --task $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text) \
         --container ec2 --interactive --command "/bin/sh"
 
-To look into an active task
+To look into an active task:
 
     aws ecs describe-tasks  --cluster ec2 \
         --tasks $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text)
@@ -112,7 +111,7 @@ Install and / or activate Python virtual environment (you need [uv](https://gith
 
 Note spaces after the first dot.
 
-For work it need [uv](https://github.com/astral-sh/uv) installed.
+For this to work you need [uv](https://github.com/astral-sh/uv) installed.
 
 ### Terraform
 
