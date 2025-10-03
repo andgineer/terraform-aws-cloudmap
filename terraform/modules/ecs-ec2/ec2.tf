@@ -17,10 +17,10 @@ resource "aws_launch_configuration" "this" {
   security_groups      = var.ecs_security_groups
   user_data            = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.this.name} >> /etc/ecs/ecs.config"
   instance_type        = "m5.large"
-#  key_name             = "andgineer"
+  #  key_name             = "andgineer"
   #checkov:skip=CKV_AWS_8: https://docs.bridgecrew.io/docs/general_13
 
-  root_block_device {  # tfsec:ignore:aws-ec2-enable-launch-config-at-rest-encryption
+  root_block_device { # tfsec:ignore:aws-ec2-enable-launch-config-at-rest-encryption
     volume_type = "gp2"
     volume_size = "10"
   }
@@ -77,7 +77,7 @@ resource "aws_autoscaling_group" "this" {
 
 # ============================== Attach to the ECS cluster ==============================
 
-resource "aws_ecs_cluster_capacity_providers" "this" {  # tflint-ignore: terraform_required_providers
+resource "aws_ecs_cluster_capacity_providers" "this" { # tflint-ignore: terraform_required_providers
   cluster_name       = aws_ecs_cluster.this.name
   capacity_providers = [aws_ecs_capacity_provider.this.name]
 }

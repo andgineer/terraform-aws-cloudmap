@@ -1,9 +1,9 @@
-resource "random_password" "db" {  # tflint-ignore: terraform_required_providers
+resource "random_password" "db" { # tflint-ignore: terraform_required_providers
   length  = 22
   special = false
 }
 
-resource "aws_secretsmanager_secret" "database" {  # tfsec:ignore:aws-ssm-secret-use-customer-key
+resource "aws_secretsmanager_secret" "database" { # tfsec:ignore:aws-ssm-secret-use-customer-key
   #checkov:skip=CKV_AWS_149: KMS encryption
   #checkov:skip=CKV_AWS_57: no rotation
   #checkov:skip=CKV2_AWS_57: no rotation
@@ -41,7 +41,7 @@ resource "aws_db_subnet_group" "this" {
   tags       = var.tags
 }
 
-resource "aws_rds_cluster" "database" {  # tfsec:ignore:aws-rds-encrypt-cluster-storage-data
+resource "aws_rds_cluster" "database" { # tfsec:ignore:aws-rds-encrypt-cluster-storage-data
   #checkov:skip=CKV_AWS_139: Deletion protection
   #checkov:skip=CKV_AWS_327: KMS encryption
   #checkov:skip=CKV_AWS_162: no IAM auth
@@ -51,7 +51,7 @@ resource "aws_rds_cluster" "database" {  # tfsec:ignore:aws-rds-encrypt-cluster-
   cluster_identifier              = "${var.ecs_name}-db"
   engine                          = "aurora-postgresql"
   engine_mode                     = "provisioned" # "serverless" for serverless v1
-  engine_version                  = "13.6" # at least 13.6 for serverless v2
+  engine_version                  = "13.6"        # at least 13.6 for serverless v2
   master_username                 = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["username"]
   master_password                 = jsondecode(aws_secretsmanager_secret_version.database.secret_string)["password"]
   db_subnet_group_name            = aws_db_subnet_group.this.name
@@ -64,14 +64,14 @@ resource "aws_rds_cluster" "database" {  # tfsec:ignore:aws-rds-encrypt-cluster-
   db_cluster_parameter_group_name = "default.aurora-postgresql13"
   database_name                   = "database"
 
-#  # serverless v1
-#  scaling_configuration {
-#    auto_pause               = false
-#    min_capacity             = 2
-#    max_capacity             = 2
-#    seconds_until_auto_pause = 300
-#    timeout_action           = "RollbackCapacityChange"
-#  }
+  #  # serverless v1
+  #  scaling_configuration {
+  #    auto_pause               = false
+  #    min_capacity             = 2
+  #    max_capacity             = 2
+  #    seconds_until_auto_pause = 300
+  #    timeout_action           = "RollbackCapacityChange"
+  #  }
 
   # serverless v2
   serverlessv2_scaling_configuration {
@@ -83,22 +83,22 @@ resource "aws_rds_cluster" "database" {  # tfsec:ignore:aws-rds-encrypt-cluster-
 }
 
 # is necessary for serverless v2 only
-resource "aws_rds_cluster_instance" "orthanc" {  # tflint-ignore: terraform_required_providers # tfsec:ignore:aws-rds-enable-performance-insights
+resource "aws_rds_cluster_instance" "orthanc" { # tflint-ignore: terraform_required_providers # tfsec:ignore:aws-rds-enable-performance-insights
   #checkov:skip=CKV_AWS_118: do not want to mess with monitoring ARN for the detailed monitoring
   #checkov:skip=CKV_AWS_353: no need for performance insights
   #checkov:skip=CKV_AWS_354: no encryption for performance insights
   identifier                 = "${var.ecs_name}-db"
   cluster_identifier         = aws_rds_cluster.database.id
-  instance_class             = "db.serverless"  # serverless v2
+  instance_class             = "db.serverless" # serverless v2
   engine                     = aws_rds_cluster.database.engine
   engine_version             = aws_rds_cluster.database.engine_version
   auto_minor_version_upgrade = true
-#  monitoring_interval        = 5
+  #  monitoring_interval        = 5
 
   tags = var.tags
 }
 
-resource "null_resource" "db_is_ready" {  # tflint-ignore: terraform_required_providers
+resource "null_resource" "db_is_ready" { # tflint-ignore: terraform_required_providers
   triggers = {
     cluster_id = aws_rds_cluster.database.id
   }

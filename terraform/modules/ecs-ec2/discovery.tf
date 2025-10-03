@@ -6,7 +6,7 @@ resource "aws_service_discovery_private_dns_namespace" "this" {
   vpc  = var.vpc_id
 }
 
-resource "aws_service_discovery_service" "this" {  # tflint-ignore: terraform_required_providers
+resource "aws_service_discovery_service" "this" { # tflint-ignore: terraform_required_providers
   name = "ecs-ec2"
   dns_config {
     namespace_id = aws_service_discovery_private_dns_namespace.this.id

@@ -6,4 +6,3 @@ ecs_ec2_image = "hello-world"
 ecs_fargate_image= "hello-world"
 
 cloudmap_namespace = "my-namespace"
-

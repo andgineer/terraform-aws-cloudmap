@@ -5,7 +5,7 @@ This template helps set up Fargate and EC2-based ECS clusters using AWS CloudMap
 ## Service Discovery
 
 - **Fargate:** Uses AWS Service Connect, creating HTTP-only CloudMap services. Includes an automatic proxy container.
-- **EC2-based ECS:** Uses DNS-based discovery. 
+- **EC2-based ECS:** Uses DNS-based discovery.
 
 ### AWS Service Connect (Fargate)
 
@@ -21,8 +21,8 @@ This template helps set up Fargate and EC2-based ECS clusters using AWS CloudMap
 
 ### Environments (dev, prod, etc)
 
-To avoid duplicating code, the same `my-application` folder is used for different environments. 
-However, it is necessary to re-initialize the local Terraform state from S3 every time the environment is switched. 
+To avoid duplicating code, the same `my-application` folder is used for different environments.
+However, it is necessary to re-initialize the local Terraform state from S3 every time the environment is switched.
 
 To switch environments, follow these steps:
 
@@ -60,7 +60,7 @@ See details in [AWS ECS EXEC](https://docs.aws.amazon.com/AmazonECS/latest/devel
 
 You should locally install [Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-macos).
 
-A useful utility to check your system's readiness for ECS EXEC is 
+A useful utility to check your system's readiness for ECS EXEC is
 [Exec-checker](https://github.com/aws-containers/amazon-ecs-exec-checker).
 
 You can connect to the container in ECS using:

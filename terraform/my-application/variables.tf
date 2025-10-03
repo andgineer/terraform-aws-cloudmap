@@ -23,4 +23,3 @@ variable "ecs_fargate_image" {
 variable "cloudmap_namespace" {
   type = string
 }
-

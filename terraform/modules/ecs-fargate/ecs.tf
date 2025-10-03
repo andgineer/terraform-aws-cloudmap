@@ -25,16 +25,16 @@ resource "aws_ecs_task_definition" "this" {
   memory                   = 24576
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  container_definitions    = templatefile("${path.module}/templates/task.tf.tpl",
-  {
-    LOG_GROUP_NAME  = aws_cloudwatch_log_group.this.name
-    AWS_REGION      = var.region
-    IMAGE   = var.image
-    NAME    = var.ecs_name
-    CONTAINER_PORT  = var.container_port
-    environment = jsonencode([
-      {name = "env_var_name", value = "value"}
-    ])
+  container_definitions = templatefile("${path.module}/templates/task.tf.tpl",
+    {
+      LOG_GROUP_NAME = aws_cloudwatch_log_group.this.name
+      AWS_REGION     = var.region
+      IMAGE          = var.image
+      NAME           = var.ecs_name
+      CONTAINER_PORT = var.container_port
+      environment = jsonencode([
+        { name = "env_var_name", value = "value" }
+      ])
   })
 
   depends_on = [
@@ -45,7 +45,7 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 # ============================== Service ==============================
-resource "aws_ecs_service" "this" {  # tflint-ignore: terraform_required_providers
+resource "aws_ecs_service" "this" { # tflint-ignore: terraform_required_providers
   name                 = var.ecs_name
   cluster              = aws_ecs_cluster.this.id
   task_definition      = aws_ecs_task_definition.this.arn

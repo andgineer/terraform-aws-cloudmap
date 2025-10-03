@@ -3,7 +3,7 @@
 ##
 #
 
-resource "aws_alb" "this" {  # tfsec:ignore:aws-elb-drop-invalid-headers
+resource "aws_alb" "this" { # tfsec:ignore:aws-elb-drop-invalid-headers
   #checkov:skip=CKV_AWS_91:
   #checkov:skip=CKV_AWS_131:
   #checkov:skip=CKV_AWS_150:
@@ -22,7 +22,7 @@ resource "aws_alb_listener" "this" {
   #checkov:skip=CKV_AWS_103:
   load_balancer_arn = aws_alb.this.arn
   port              = 80
-  protocol          = "HTTP"  # tfsec:ignore:aws-elb-http-not-used
+  protocol          = "HTTP" # tfsec:ignore:aws-elb-http-not-used
 
   default_action {
     type             = "forward"
@@ -32,7 +32,7 @@ resource "aws_alb_listener" "this" {
   tags = var.tags
 }
 
-resource "aws_lb_target_group" "this" {  # tflint-ignore: terraform_required_providers
+resource "aws_lb_target_group" "this" { # tflint-ignore: terraform_required_providers
   #checkov:skip=CKV_AWS_378:Ok without SSL for demo
   name        = var.ecs_name
   port        = 80

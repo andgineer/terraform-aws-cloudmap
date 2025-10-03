@@ -1,4 +1,4 @@
-resource "aws_ecs_task_definition" "this" {  # tflint-ignore: terraform_required_providers
+resource "aws_ecs_task_definition" "this" { # tflint-ignore: terraform_required_providers
   family             = var.ecs_taskdef_family
   execution_role_arn = aws_iam_role.ecs_task_execution.arn
   task_role_arn      = aws_iam_role.ecs_instance.arn
@@ -9,20 +9,20 @@ resource "aws_ecs_task_definition" "this" {  # tflint-ignore: terraform_required
   requires_compatibilities = ["EC2"]
 
   container_definitions = jsonencode([{
-    name: var.ecs_name,
-    image: var.image,
-    cpu: 0,
-    portMappings: [
+    name : var.ecs_name,
+    image : var.image,
+    cpu : 0,
+    portMappings : [
       {
-        "name": "${var.ecs_name}-tcp",
-        "containerPort": var.ecs_target_group_port,
-        "hostPort": var.ecs_target_group_port,
-        "protocol": "tcp",
-        "appProtocol": "http"
+        "name" : "${var.ecs_name}-tcp",
+        "containerPort" : var.ecs_target_group_port,
+        "hostPort" : var.ecs_target_group_port,
+        "protocol" : "tcp",
+        "appProtocol" : "http"
       }
     ],
-    essential: true,
-    environment: [{name = "env_var_name", value = "value"}],
+    essential : true,
+    environment : [{ name = "env_var_name", value = "value" }],
     secrets = [
       {
         name      = "DB_HOST"
@@ -41,18 +41,18 @@ resource "aws_ecs_task_definition" "this" {  # tflint-ignore: terraform_required
         valueFrom = "${aws_secretsmanager_secret.database.arn}:password::"
       }
     ]
-    mountPoints: [],
-    volumesFrom: [],
-    logConfiguration: {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-create-group": "true",
-        "awslogs-group": aws_cloudwatch_log_group.this.name,
-        "awslogs-region": var.region,
-        "awslogs-stream-prefix": "ecs"
+    mountPoints : [],
+    volumesFrom : [],
+    logConfiguration : {
+      "logDriver" : "awslogs",
+      "options" : {
+        "awslogs-create-group" : "true",
+        "awslogs-group" : aws_cloudwatch_log_group.this.name,
+        "awslogs-region" : var.region,
+        "awslogs-stream-prefix" : "ecs"
       }
     }
-    linuxParameters = { initProcessEnabled = true }  # ecs execute-command
+    linuxParameters = { initProcessEnabled = true } # ecs execute-command
   }])
 
   runtime_platform {
@@ -62,5 +62,3 @@ resource "aws_ecs_task_definition" "this" {  # tflint-ignore: terraform_required
 
   tags = var.tags
 }
-
-
