@@ -39,24 +39,26 @@ make init
 ENVIRONMENT=prod make init
 ```
 
+Set up Python virtual environment for BDD tests:
+```bash
+source ./activate.sh
+```
+
+**IMPORTANT**: Always activate the virtual environment before running any commands. Use `source ./activate.sh` before each command.
+
 Run BDD tests with terraform-compliance:
 ```bash
-make test
+source ./activate.sh && make test
 ```
 
 Apply infrastructure:
 ```bash
-make apply
+source ./activate.sh && make apply
 ```
 
 Destroy infrastructure:
 ```bash
-make destroy
-```
-
-Set up Python virtual environment for BDD tests:
-```bash
-. ./activate.sh
+source ./activate.sh && make destroy
 ```
 
 ## Development Environment Setup
@@ -71,7 +73,7 @@ brew install pre-commit gawk coreutils
 
 Install pre-commit hooks:
 ```bash
-pre-commit install
+source ./activate.sh && pre-commit install
 ```
 
 ## Environment Management

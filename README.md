@@ -1,4 +1,4 @@
-# Terraform Project Template for Service Discovery in ECS Clusters with EC2 and Fargate
+# Battle-tested AWS ECS infrastructure: CloudMap service discovery for Fargate (Service Connect) and EC2 (DNS) clusters
 
 This template helps set up Fargate and EC2-based ECS clusters using AWS CloudMap for communication.
 
@@ -14,7 +14,7 @@ This template helps set up Fargate and EC2-based ECS clusters using AWS CloudMap
 
 ### DNS-based Service Discovery (EC2-based ECS)
 
-- If containers use `bridge` mode, creates `SRV` records instead of `A` records (Nginx free version can't resolve `SRV` records)
+- If containers use `bridge` mode, creates `SRV` records instead of `A` records (Nginx free version cannot resolve `SRV` records)
 - To get `A` records, use `awsvpc` mode
 
 ## Rationale
@@ -29,8 +29,8 @@ To switch environments, follow these steps:
 - Clear the local state, including the `.terraform` folder and `.terraform.lock.hcl` file.
 - Run `terraform init` with the appropriate environment variables.
 
-It is crucial not to merge states if the local state is not cleared. 
-Just delete the local state, and `terraform init` will restore it from S3, which is always safe.
+It is crucial to clear the local state to avoid merging states from different environments.
+Delete the local state, and `terraform init` will restore it from S3, which is always safe.
 
 ## Structure
 
@@ -65,14 +65,18 @@ A useful utility to check your system's readiness for ECS EXEC is
 
 You can connect to the container in ECS using:
 
-      aws ecs execute-command --cluster ec2 \
-        --task $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text) \
-        --container ec2 --interactive --command "/bin/sh"
+```shell
+aws ecs execute-command --cluster ec2 \
+  --task $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text) \
+  --container ec2 --interactive --command "/bin/sh"
+```
 
-To look into an active task:
+To inspect an active task:
 
-    aws ecs describe-tasks  --cluster ec2 \
-        --tasks $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text)
+```shell
+aws ecs describe-tasks --cluster ec2 \
+  --tasks $(aws ecs list-tasks --cluster ec2 --query "taskArns" --output text)
+```
 
 
 ## Developer environment
@@ -87,9 +91,11 @@ brew install hashicorp/tap/terraform
 
 ### Pre-commit
 
-Use [pre-commit](https://pre-commit.com/#install) hooks to validate the terraform code quality:
+Use [pre-commit](https://pre-commit.com/#install) hooks to validate the Terraform code quality:
 
-    pre-commit install
+```shell
+pre-commit install
+```
 
 #### Terraform code analysis
 
@@ -103,19 +109,19 @@ brew install pre-commit gawk coreutils
 
 ### virtualenv
 
-Install and / or activate Python virtual environment (you need [uv](https://github.com/astral-sh/uv) installed):
+Install and/or activate Python virtual environment (you need [uv](https://github.com/astral-sh/uv) installed):
 
 ```shell
 . ./activate.sh
 ```
 
-Note spaces after the first dot.
+Note the spaces after the first dot.
 
-For this to work you need [uv](https://github.com/astral-sh/uv) installed.
+For this to work, you need [uv](https://github.com/astral-sh/uv) installed.
 
 ### Terraform
 
-Initialize Terraform (you need AWS credentials active) with:
+Initialize Terraform (requires active AWS credentials) with:
 
 ```shell
 make init
