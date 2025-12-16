@@ -118,7 +118,7 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_managed" {
   policy_arn = data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_instance_custom" {
+resource "aws_iam_role_policy_attachment" "ecs_instance_custom" { # tflint-ignore: terraform_required_providers
   role       = aws_iam_role.ecs_instance.name
   policy_arn = aws_iam_policy.ecs_instance.arn
 }
