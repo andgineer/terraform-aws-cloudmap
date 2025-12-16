@@ -54,7 +54,7 @@ resource "aws_ecs_capacity_provider" "this" {
 
 resource "aws_autoscaling_group" "this" {
   name                 = var.ecs_name
-  vpc_zone_identifier  = var.ecs_subnets
+  vpc_zone_identifier  = var.subnets
   launch_configuration = aws_launch_configuration.this.name
   #checkov:skip=CKV_AWS_315: The scaling group is managed by ESC cluster so we do not need to specify instance type
 

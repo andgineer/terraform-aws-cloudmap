@@ -25,13 +25,15 @@ data "aws_iam_policy_document" "assume_base" {
 
 # ====================== EC2 role to be included to ECS cluster =======================
 resource "aws_iam_role" "ec2" {
-  name = "${var.ecs_name}_ec2"
-  managed_policy_arns = [
-    data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn,
-  ]
+  name               = "${var.ecs_name}_ec2"
   assume_role_policy = data.aws_iam_policy_document.assume_base.json
 
   tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "ec2" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn
 }
 
 
@@ -55,14 +57,20 @@ resource "aws_iam_policy" "ecs_task_execution" {
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
-  name = "${var.ecs_name}_ecs_task_execution"
-  managed_policy_arns = [
-    data.aws_iam_policy.ecs_task_execution.arn,
-    aws_iam_policy.ecs_task_execution.arn,
-  ]
+  name               = "${var.ecs_name}_ecs_task_execution"
   assume_role_policy = data.aws_iam_policy_document.assume_base.json
 
   tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_managed" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = data.aws_iam_policy.ecs_task_execution.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_custom" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = aws_iam_policy.ecs_task_execution.arn
 }
 
 ## ============================== ECS Container Role ==============================
@@ -99,12 +107,18 @@ resource "aws_iam_policy" "ecs_instance" {
 }
 
 resource "aws_iam_role" "ecs_instance" { # tflint-ignore: terraform_required_providers
-  name = "${var.ecs_name}_ecs_instance"
-  managed_policy_arns = [
-    data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn,
-    aws_iam_policy.ecs_instance.arn,
-  ]
+  name               = "${var.ecs_name}_ecs_instance"
   assume_role_policy = data.aws_iam_policy_document.assume_base.json
 
   tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_managed" {
+  role       = aws_iam_role.ecs_instance.name
+  policy_arn = data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_custom" {
+  role       = aws_iam_role.ecs_instance.name
+  policy_arn = aws_iam_policy.ecs_instance.arn
 }

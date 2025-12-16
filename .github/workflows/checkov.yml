@@ -1,7 +1,12 @@
 name: Checkov
 
-# Only trigger, when the build workflow succeeded
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_run:
     workflows: ["Tfsec"]
     types:
@@ -15,7 +20,7 @@ jobs:
       steps:
 
       - name : Check out Git Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Run Checkov
         run: |

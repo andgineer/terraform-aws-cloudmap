@@ -49,14 +49,15 @@ data "aws_iam_policy_document" "base" {
 #}
 
 resource "aws_iam_role" "ecs_task_execution" {
-  name = "${var.ecs_name}_ecs_task_execution"
-  managed_policy_arns = [
-    data.aws_iam_policy.ecs_task_execution.arn,
-    #    aws_iam_policy.ecs_task_execution.arn,
-  ]
+  name               = "${var.ecs_name}_ecs_task_execution"
   assume_role_policy = data.aws_iam_policy_document.base.json
 
   tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = data.aws_iam_policy.ecs_task_execution.arn
 }
 
 ## ============================== ECS Container Role ==============================
@@ -82,13 +83,23 @@ resource "aws_iam_policy" "ecs_instance" {
 }
 
 resource "aws_iam_role" "ecs_instance" { # tflint-ignore: terraform_required_providers
-  name = "${var.ecs_name}_ecs_instance"
-  managed_policy_arns = [
-    data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn,
-    data.aws_iam_policy.rds_full_access.arn,
-    aws_iam_policy.ecs_instance.arn,
-  ]
+  name               = "${var.ecs_name}_ecs_instance"
   assume_role_policy = data.aws_iam_policy_document.base.json
 
   tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_ecs" {
+  role       = aws_iam_role.ecs_instance.name
+  policy_arn = data.aws_iam_policy.amazon_ec2_container_service_for_ec2_role.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_rds" {
+  role       = aws_iam_role.ecs_instance.name
+  policy_arn = data.aws_iam_policy.rds_full_access.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_custom" {
+  role       = aws_iam_role.ecs_instance.name
+  policy_arn = aws_iam_policy.ecs_instance.arn
 }

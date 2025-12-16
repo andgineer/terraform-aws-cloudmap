@@ -11,8 +11,14 @@ init:
 
 test:
 	cd terraform/my-application; \
-	terraform plan -var-file '../environments/${ENVIRONMENT}/tfvars.hcl' -out .tfplan; \
-	terraform-compliance --features ../../tests/features --planfile .tfplan
+	mv backend.tf backend.tf.bak 2>/dev/null || true; \
+	terraform init -reconfigure || true; \
+	terraform plan -var-file '../environments/${ENVIRONMENT}/tfvars.hcl' -out .tfplan && \
+	terraform-compliance --features ../../tests/features --planfile .tfplan; \
+	test_result=$$?; \
+	rm -f .tfplan; \
+	mv backend.tf.bak backend.tf 2>/dev/null || true; \
+	exit $$test_result
 
 apply:
 	cd terraform/my-application; \
