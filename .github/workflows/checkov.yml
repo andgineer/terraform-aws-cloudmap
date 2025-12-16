@@ -7,10 +7,6 @@ on:
   pull_request:
     branches:
       - main
-  workflow_run:
-    workflows: ["Tfsec"]
-    types:
-      - completed
 
 permissions: read-all
 

@@ -99,7 +99,7 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_rds" {
   policy_arn = data.aws_iam_policy.rds_full_access.arn
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_instance_custom" {
+resource "aws_iam_role_policy_attachment" "ecs_instance_custom" { # tflint-ignore: terraform_required_providers
   role       = aws_iam_role.ecs_instance.name
   policy_arn = aws_iam_policy.ecs_instance.arn
 }

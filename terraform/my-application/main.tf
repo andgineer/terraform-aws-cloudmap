@@ -3,9 +3,6 @@ provider "aws" {
 }
 
 ## Account info:
-# Get aws account id
-data "aws_caller_identity" "current" {}
-
 # Get availability zones
 data "aws_availability_zones" "available" {}
 
